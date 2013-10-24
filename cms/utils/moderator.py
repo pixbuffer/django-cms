@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import datetime
 from django.utils import timezone
-from cms.models import Page, PageModeratorState, CMSPlugin, Title
+from cms.models import Page, PageModeratorState, CMSPlugin
 
 
 def page_changed(page, old_page=None, force_moderation_action=None):
@@ -64,8 +64,13 @@ def get_model_queryset(model, request=None):
     # Default case / moderator is used but there is no request
     return model.objects.public()
 
+
 # queryset helpers for basic models
 #get_page_queryset = lambda request=None: get_model_queryset(Page, request)
-get_title_queryset = lambda request=None: Title.objects.all()   # not sure if we need to only grab public items here
 get_cmsplugin_queryset = lambda request=None: CMSPlugin.objects.all()   # CMSPlugin is no longer extending from Publisher
 
+
+def get_title_queryset(request=None):
+    from cms.models import Title
+    # not sure if we need to only grab public items here
+    return Title.objects.all()
