@@ -8,6 +8,7 @@ from cms.plugins.text.utils import plugin_tags_to_user_html
 from django.forms.fields import CharField
 from cms.plugins.text.settings import USE_TINYMCE
 from django.conf import settings
+from django import template
 
 
 class TextPlugin(CMSPluginBase):
@@ -46,8 +47,10 @@ class TextPlugin(CMSPluginBase):
         return super(TextPlugin, self).get_form(request, obj, **kwargs)
 
     def render(self, context, instance, placeholder):
+        text = template.Template(instance.body).render(
+            template.Context(context, autoescape=False))
         context.update({
-            'body': plugin_tags_to_user_html(instance.body, context, placeholder), 
+            'body': plugin_tags_to_user_html(text, context, placeholder), 
             'placeholder': placeholder,
             'object': instance
         })
