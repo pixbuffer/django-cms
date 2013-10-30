@@ -102,6 +102,8 @@ def get_page_from_path(path, preview=False, draft=False):
             page = page_qs.get()
         except Page.DoesNotExist:
             return None
+        except Page.MultipleObjectsReturned:
+            return page_qs[0]
         return page
     else:
         return None

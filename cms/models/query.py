@@ -8,15 +8,19 @@ from django.conf import settings
 from cms.exceptions import NoHomeFound
 from django.utils import timezone
 
+from threading import local
+
+locals = local()
 
 class PageQuerySet(PublisherQuerySet):
     def on_site(self, site=None):
         if not site:
             try:
-                site = Site.objects.get_current()
+                site = Site.objects.get(id=getattr(locals, 'site_id', None))
             except Site.DoesNotExist:
                 site = None
-        return self.filter(site=site)
+        default_site = Site.objects.get(id=1)
+        return (self.filter(site__in=[site,default_site]).order_by('-site__id'))
 
     def root(self):
         """
