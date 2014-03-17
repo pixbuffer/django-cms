@@ -2,7 +2,6 @@
 from __future__ import with_statement
 from cms.apphook_pool import apphook_pool
 from cms.utils.i18n import force_language, get_language_list
-from cms.models.pagemodel import Page
 
 from django.conf import settings
 from django.conf.urls.defaults import patterns
@@ -34,6 +33,7 @@ def applications_page_check(request, current_page=None, path=None):
     for lang in get_language_list():
         if path.startswith(lang + "/"):
             path = path[len(lang + "/"):]
+    from cms.models.pagemodel import Page
     for resolver in APP_RESOLVERS:
         try:
             page_id = resolver.resolve_page_id(path)
